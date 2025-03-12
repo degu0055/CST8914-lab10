@@ -75,32 +75,57 @@ class MenuButtonActions {
   }
 
   setFocusToPreviousMenuitem(currentMenuitem) {
+
     // Get the currently focused item
     const currentItem = document.activeElement;
-
+  
     // Find the index of the current item
     const currentIndex = Array.from(this.menuitemNodes).indexOf(currentItem);
-
-    // If the current item is not the last one, focus the next item
-    if (currentIndex !== -1 && currentIndex > 0) {
-      this.menuitemNodes[currentIndex - 1].focus();
+  
+    // If the current item is not the first one, focus the previous item; otherwise, focus the last item
+    if (currentIndex !== -1) {
+      // Set tabindex -1 for the current item if it's not active
+      if (currentItem !== document.activeElement) {
+        currentItem.setAttribute('tabindex', '-1');
+      }
+  
+      const nextIndex = currentIndex === 0 ? this.menuitemNodes.length - 1 : currentIndex - 1;
+  
+      // Focus the next item
+      this.menuitemNodes[nextIndex].focus();
+  
+      // Set tabindex to 0 for the newly focused item (or adjust as needed)
+      this.menuitemNodes[nextIndex].setAttribute('tabindex', '0');
     }
   }
+  
 
   setFocusToNextMenuitem(currentMenuitem) {
-   
+
     // Get the currently focused item
     const currentItem = document.activeElement;
-
+  
     // Find the index of the current item
     const currentIndex = Array.from(this.menuitemNodes).indexOf(currentItem);
-
+  
     // If the current item is not the last one, focus the next item
-    if (currentIndex !== -1 && currentIndex < this.menuitemNodes.length - 1) {
-      this.menuitemNodes[currentIndex + 1].focus();
+    if (currentIndex !== -1) {
+      // Set tabindex -1 for the current item if it's not active
+      if (currentItem !== document.activeElement) {
+        currentItem.setAttribute('tabindex', '-1');
+      }
+  
+      // If it's the last item, go back to the first item
+      const nextIndex = currentIndex < this.menuitemNodes.length - 1 ? currentIndex + 1 : 0;
+  
+      // Focus the next item
+      this.menuitemNodes[nextIndex].focus();
+  
+      // Set tabindex to 0 for the newly focused item (or adjust as needed)
+      this.menuitemNodes[nextIndex].setAttribute('tabindex', '0');
     }
-
   }
+  
 
   setFocusByFirstCharacter(currentMenuitem, char) {
     var start, index;
@@ -334,7 +359,7 @@ class MenuButtonActions {
           this.setFocusToLastMenuitem();
           flag = true;
           break;
-          
+
         case 'PageDown':
           this.setFocusToLastMenuitem();
           flag = true;
